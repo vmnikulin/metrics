@@ -628,7 +628,7 @@ public class JmxReporter implements Closeable {
 
         private ObjectName createName(String type, String name) {
             try {
-                return new ObjectName(this.name, "name", name);
+	            return new ObjectName(/*this.name, "name", */name);
             } catch (MalformedObjectNameException e) {
                 try {
                     return new ObjectName(this.name, "name", ObjectName.quote(name));
