@@ -81,11 +81,11 @@ public class JmxReporterTest {
 
         when(timer.getSnapshot()).thenReturn(tSnapshot);
 
-        registry.register("gauge", gauge);
-        registry.register("test.counter", counter);
-        registry.register("test.histogram", histogram);
-        registry.register("test.meter", meter);
-        registry.register("test.another.timer", timer);
+        registry.register("metrics:name=gauge", gauge);
+        registry.register("metrics:name=test.counter", counter);
+        registry.register("metrics:name=test.histogram", histogram);
+        registry.register("metrics:name=test.meter", meter);
+        registry.register("metrics:name=test.another.timer", timer);
 
         reporter.start();
     }
@@ -97,23 +97,23 @@ public class JmxReporterTest {
 
     @Test
     public void registersMBeansForGauges() throws Exception {
-        /*final AttributeList attributes = getAttributes("gauge", "Value");
+        final AttributeList attributes = getAttributes("metrics:name=gauge", "Value");
 
         assertThat(values(attributes))
-                .contains(entry("Value", 1));*/
+                .contains(entry("Value", 1));
     }
 
     @Test
     public void registersMBeansForCounters() throws Exception {
-        /*final AttributeList attributes = getAttributes("test.counter", "Count");
+        final AttributeList attributes = getAttributes("metrics:name=test.counter", "Count");
 
         assertThat(values(attributes))
-                .contains(entry("Count", 100L));*/
+                .contains(entry("Count", 100L));
     }
 
     @Test
     public void registersMBeansForHistograms() throws Exception {
-        /*final AttributeList attributes = getAttributes("test.histogram",
+        final AttributeList attributes = getAttributes("metrics:name=test.histogram",
                                                        "Count",
                                                        "Max",
                                                        "Mean",
@@ -137,12 +137,12 @@ public class JmxReporterTest {
                 .contains(entry("95thPercentile", 8.0))
                 .contains(entry("98thPercentile", 9.0))
                 .contains(entry("99thPercentile", 10.0))
-                .contains(entry("999thPercentile", 11.0))*/;
+                .contains(entry("999thPercentile", 11.0));
     }
 
     @Test
     public void registersMBeansForMeters() throws Exception {
-        /*final AttributeList attributes = getAttributes("test.meter",
+        final AttributeList attributes = getAttributes("metrics:name=test.meter",
                                                        "Count",
                                                        "MeanRate",
                                                        "OneMinuteRate",
@@ -156,12 +156,12 @@ public class JmxReporterTest {
                 .contains(entry("OneMinuteRate", 3.0))
                 .contains(entry("FiveMinuteRate", 4.0))
                 .contains(entry("FifteenMinuteRate", 5.0))
-                .contains(entry("RateUnit", "events/second"));*/
+                .contains(entry("RateUnit", "events/second"));
     }
 
     @Test
     public void registersMBeansForTimers() throws Exception {
-        /*final AttributeList attributes = getAttributes("test.another.timer",
+        final AttributeList attributes = getAttributes("metrics:name=test.another.timer",
                                                        "Count",
                                                        "MeanRate",
                                                        "OneMinuteRate",
@@ -197,7 +197,7 @@ public class JmxReporterTest {
                 .contains(entry("99thPercentile", 900.0))
                 .contains(entry("999thPercentile", 1000.0))
                 .contains(entry("RateUnit", "events/second"))
-                .contains(entry("DurationUnit", "milliseconds"));*/
+                .contains(entry("DurationUnit", "milliseconds"));
     }
 
     @Test
@@ -205,7 +205,7 @@ public class JmxReporterTest {
         reporter.stop();
 
         try {
-            getAttributes("gauge", "Value");
+            getAttributes("metrics:name=gauge", "Value");
             failBecauseExceptionWasNotThrown(InstanceNotFoundException.class);
         } catch (InstanceNotFoundException e) {
 
@@ -213,7 +213,7 @@ public class JmxReporterTest {
     }
 
     private AttributeList getAttributes(String name, String... attributeNames) throws JMException {
-        final ObjectName n = new ObjectName(this.name, "name", name);
+        final ObjectName n = new ObjectName(/*this.name, "name", */name);
         return mBeanServer.getAttributes(n, attributeNames);
     }
 
